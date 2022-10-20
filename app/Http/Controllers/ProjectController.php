@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
+use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
@@ -15,7 +16,9 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Projects/Index', [
+            'projects' => auth()->user()->currentTeam->projects,
+        ]);
     }
 
     /**
@@ -25,7 +28,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Projects/Edit');
     }
 
     /**
@@ -36,7 +39,11 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        //
+        $project = auth()->user()->currentTeam->projects()->create(
+            $request->validated() + ['user_id' => auth()->id()]
+        );
+
+        return redirect()->route('projects.show', $project);
     }
 
     /**
@@ -47,7 +54,9 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        //
+        return Inertia::render('Projects/Show', [
+            'project' => $project,
+        ]);
     }
 
     /**
@@ -58,7 +67,9 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        //
+        return Inertia::render('Projects/Edit', [
+            'project' => $project,
+        ]);
     }
 
     /**
@@ -70,7 +81,9 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        //
+        $project->update($request->validated());
+
+        return redirect()->route('projects.show', $project);
     }
 
     /**
@@ -81,6 +94,8 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+        $project->delete();
+
+        return redirect()->route('projects.index');
     }
 }

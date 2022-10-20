@@ -12,6 +12,7 @@ class Project extends Model
     use Traits\Taggable;
 
     protected $fillable = [
+        'user_id',
         'name',
         'repo',
     ];
