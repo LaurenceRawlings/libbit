@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('team_id')->constrained();
+            $table->foreignId('user_id');
+            $table->foreignId('team_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('repo')->nullable();
             $table->timestamps();
