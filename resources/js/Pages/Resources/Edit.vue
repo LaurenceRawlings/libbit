@@ -11,6 +11,7 @@ import ActionMessage from '@/Components/ActionMessage.vue';
 import SectionBorder from '@/Components/SectionBorder.vue';
 import DeleteResourceForm from '@/Pages/Resources/Partials/DeleteResourceForm.vue';
 import { hasPermission } from '@/Shared/permissions.js';
+import Breadcrumbs from '@/Components/Breadcrumbs.vue';
 
 onMounted(() => {
     if (props.resource) {
@@ -56,9 +57,10 @@ const types = [
 <template>
     <AppLayout :title="`${action} Resource`">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{action}} Resource
-            </h2>
+            <Breadcrumbs class="font-semibold text-xl text-gray-800 leading-tight" :crumbs="[
+                    { title: 'Projects', link: route('projects.index') },
+                    { title: props.project.name, link: route('projects.show', props.project.id) },
+                ]" :title="props.resource.name" />
         </template>
 
         <div>

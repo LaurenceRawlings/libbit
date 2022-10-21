@@ -11,6 +11,7 @@ import ActionMessage from '@/Components/ActionMessage.vue';
 import SectionBorder from '@/Components/SectionBorder.vue';
 import DeleteProjectForm from '@/Pages/Projects/Partials/DeleteProjectForm.vue';
 import { hasPermission } from '@/Shared/permissions.js';
+import Breadcrumbs from '@/Components/Breadcrumbs.vue';
 
 onMounted(() => {
     if (props.project) {
@@ -46,9 +47,9 @@ const action = computed(() => {
 <template>
     <AppLayout :title="`${action} Project`">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{action}} Project
-            </h2>
+            <Breadcrumbs class="font-semibold text-xl text-gray-800 leading-tight" :crumbs="[
+                    { title: 'Projects', link: route('projects.index') },
+                ]" :title="props.project.name" />
         </template>
 
         <div>
