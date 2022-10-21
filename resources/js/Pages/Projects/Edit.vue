@@ -1,11 +1,16 @@
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
+import { useForm } from '@inertiajs/inertia-vue3';
 import { computed, onMounted } from 'vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import FormSection from '@/Components/FormSection.vue';
+import ActionMessage from '@/Components/ActionMessage.vue';
+import SectionBorder from '@/Components/SectionBorder.vue';
+import DeleteProjectForm from '@/Pages/Projects/Partials/DeleteProjectForm.vue';
+import { hasPermission } from '@/Shared/permissions.js';
 
 onMounted(() => {
     if (props.project) {
@@ -46,29 +51,52 @@ const action = computed(() => {
             </h2>
         </template>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <form @submit.prevent="submit">
-                        <div>
+        <div>
+            <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+                <FormSection @submitted="submit">
+                    <template #title>
+                        {{action}} Project
+                    </template>
+
+                    <template #description>
+                        <template v-if="props.project">
+                            Update the project details.
+                        </template>
+                        <template v-else>
+                            Create a new project to store your resources.
+                        </template>
+                    </template>
+
+                    <template #form>
+                        <!-- Project Name -->
+                        <div class="col-span-6 sm:col-span-4">
                             <InputLabel for="name" value="Name" />
                             <TextInput
                                 id="name"
+                                type="text"
                                 v-model="form.name"
                                 class="mt-1 block w-full"
-                                required
-                                autofocus
                             />
-                            <InputError class="mt-2" :message="form.errors.name" />
+                            <InputError :message="form.errors.name" class="mt-2" />
                         </div>
+                    </template>
 
-                        <div class="flex items-center justify-end mt-4">
-                            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                                {{action}}
-                            </PrimaryButton>
-                        </div>
-                    </form>
-                </div>
+                    <template #actions>
+                        <ActionMessage :on="form.recentlySuccessful" class="mr-3">
+                            {{action}}ed.
+                        </ActionMessage>
+
+                        <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                            {{action}}
+                        </PrimaryButton>
+                    </template>
+                </FormSection>
+
+                <template v-if="hasPermission('delete')">
+                    <SectionBorder />
+
+                    <DeleteProjectForm class="mt-10 sm:mt-0" :project="props.project" />
+                </template>
             </div>
         </div>
     </AppLayout>
