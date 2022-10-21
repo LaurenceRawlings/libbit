@@ -9,57 +9,52 @@ import { ref } from 'vue';
 
 const props = defineProps({
     project: Object,
-    resources: Array,
+    resource: Object,
 });
 
-const confirmingProjectDeletion = ref(false);
+const confirmingResourceDeletion = ref(false);
 const form = useForm();
 
-const confirmProjectDeletion = () => {
-    confirmingProjectDeletion.value = true;
+const confirmResourceDeletion = () => {
+    confirmingResourceDeletion.value = true;
 };
 
-const deleteProject = () => {
-    form.delete(route('projects.destroy', props.project), {
-        errorBag: 'deleteProject',
+const deleteResource = () => {
+    form.delete(route('projects.resources.destroy', [props.project.id, props.resource]), {
+        errorBag: 'deleteResource',
     });
 };
 </script>
 
 <template>
-    <AppLayout :title="props.project.name">
+    <AppLayout :title="props.resource.name">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{props.project.name}}
+                {{props.resource.name}}
             </h2>
         </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <Link :href="route('projects.resources.create', props.project.id)">
+                <Link :href="route('projects.resources.edit', [props.project.id, props.resource.id])">
                     <PrimaryButton>
-                        Add Resource
+                        Edit Resource
                     </PrimaryButton>
                 </Link>
-                <Link :href="route('projects.edit', props.project.id)">
-                    <PrimaryButton>
-                        Edit Project
-                    </PrimaryButton>
-                </Link>
-                <DangerButton @click="confirmProjectDeletion">
-                    Delete Project
+                <DangerButton @click="confirmResourceDeletion">
+                    Delete Resource
                 </DangerButton>
-                <ConfirmationModal :show="confirmingProjectDeletion" @close="confirmingProjectDeletion = false">
+                <ConfirmationModal :show="confirmingResourceDeletion" @close="confirmingResourceDeletion = false">
                     <template #title>
-                        Delete Project
+                        Delete Resource
                     </template>
 
                     <template #content>
-                        Are you sure you want to delete this project? Once a project is deleted, all of its resources and data will be permanently deleted.
+                        Are you sure you want to delete this resource? Once a resource is deleted, all of its resources and data will be permanently deleted.
                     </template>
 
                     <template #footer>
-                        <SecondaryButton @click="confirmingProjectDeletion = false">
+                        <SecondaryButton @click="confirmingResourceDeletion = false">
                             Cancel
                         </SecondaryButton>
 
@@ -67,20 +62,14 @@ const deleteProject = () => {
                             class="ml-3"
                             :class="{ 'opacity-25': form.processing }"
                             :disabled="form.processing"
-                            @click="deleteProject"
+                            @click="deleteResource"
                         >
-                            Delete Project
+                            Delete Resource
                         </DangerButton>
                     </template>
                 </ConfirmationModal>
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <ul>
-                        <li v-for="resource in props.resources" :key="resource.id">
-                            <Link :href="route('projects.resources.show', [props.project.id, resource.id])">
-                                {{resource.name}}
-                            </Link>
-                        </li>
-                    </ul>
+
                 </div>
             </div>
         </div>

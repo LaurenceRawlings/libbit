@@ -12,6 +12,7 @@ class Resource extends Model
     use Traits\Taggable;
 
     protected $fillable = [
+        'user_id',
         'name',
         'type',
         'content',

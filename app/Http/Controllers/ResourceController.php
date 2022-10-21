@@ -4,28 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreResourceRequest;
 use App\Http\Requests\UpdateResourceRequest;
+use App\Models\Project;
 use App\Models\Resource;
+use Inertia\Inertia;
 
 class ResourceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Project $project)
     {
-        //
+        return Inertia::render('Resources/Edit', [
+            'project' => $project,
+        ]);
     }
 
     /**
@@ -34,9 +28,13 @@ class ResourceController extends Controller
      * @param  \App\Http\Requests\StoreResourceRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreResourceRequest $request)
+    public function store(StoreResourceRequest $request, Project $project)
     {
-        //
+        $project->resources()->create(
+            $request->validated() + ['user_id' => auth()->id()]
+        );
+
+        return redirect()->route('projects.show', $project);
     }
 
     /**
@@ -45,9 +43,12 @@ class ResourceController extends Controller
      * @param  \App\Models\Resource  $resource
      * @return \Illuminate\Http\Response
      */
-    public function show(Resource $resource)
+    public function show(Project $project, Resource $resource)
     {
-        //
+        return Inertia::render('Resources/Show', [
+            'project' => $project,
+            'resource' => $resource,
+        ]);
     }
 
     /**
@@ -56,9 +57,12 @@ class ResourceController extends Controller
      * @param  \App\Models\Resource  $resource
      * @return \Illuminate\Http\Response
      */
-    public function edit(Resource $resource)
+    public function edit(Project $project, Resource $resource)
     {
-        //
+        return Inertia::render('Resources/Edit', [
+            'project' => $project,
+            'resource' => $resource,
+        ]);
     }
 
     /**
@@ -68,9 +72,11 @@ class ResourceController extends Controller
      * @param  \App\Models\Resource  $resource
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateResourceRequest $request, Resource $resource)
+    public function update(UpdateResourceRequest $request, Project $project, Resource $resource)
     {
-        //
+        $resource->update($request->validated());
+
+        return redirect()->route('projects.resources.show', [$project, $resource]);
     }
 
     /**
@@ -79,8 +85,10 @@ class ResourceController extends Controller
      * @param  \App\Models\Resource  $resource
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Resource $resource)
+    public function destroy(Project $project, Resource $resource)
     {
-        //
+        $resource->delete();
+
+        return redirect()->route('projects.show', $project);
     }
 }
