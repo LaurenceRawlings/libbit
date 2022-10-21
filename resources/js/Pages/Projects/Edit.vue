@@ -49,7 +49,7 @@ const action = computed(() => {
         <template #header>
             <Breadcrumbs class="font-semibold text-xl text-gray-800 leading-tight" :crumbs="[
                     { title: 'Projects', link: route('projects.index') },
-                ]" :title="props.project.name" />
+                ]" :title="props.project ? props.project.name : (form.name ? form.name : 'New Project')" />
         </template>
 
         <div>
@@ -77,6 +77,7 @@ const action = computed(() => {
                                 type="text"
                                 v-model="form.name"
                                 class="mt-1 block w-full"
+                                required
                             />
                             <InputError :message="form.errors.name" class="mt-2" />
                         </div>

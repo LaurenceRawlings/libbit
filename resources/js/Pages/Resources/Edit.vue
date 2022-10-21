@@ -60,7 +60,7 @@ const types = [
             <Breadcrumbs class="font-semibold text-xl text-gray-800 leading-tight" :crumbs="[
                     { title: 'Projects', link: route('projects.index') },
                     { title: props.project.name, link: route('projects.show', props.project.id) },
-                ]" :title="props.resource.name" />
+                ]" :title="props.resource ? props.resource.name : (form.name ? form.name : 'New Resource')" />
         </template>
 
         <div>
@@ -88,6 +88,7 @@ const types = [
                                 type="text"
                                 v-model="form.name"
                                 class="mt-1 block w-full"
+                                required
                             />
                             <InputError :message="form.errors.name" class="mt-2" />
                         </div>
@@ -142,6 +143,7 @@ const types = [
                                 type="text"
                                 v-model="form.content"
                                 class="mt-1 block w-full"
+                                required
                             />
                             <InputError :message="form.errors.content" class="mt-2" />
                         </div>
