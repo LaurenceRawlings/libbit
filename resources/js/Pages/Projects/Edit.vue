@@ -92,7 +92,7 @@ const action = computed(() => {
                     </template>
                 </FormSection>
 
-                <template v-if="hasPermission('delete')">
+                <template v-if="props.project && hasPermission('delete')">
                     <SectionBorder />
 
                     <DeleteProjectForm class="mt-10 sm:mt-0" :project="props.project" />

@@ -156,7 +156,7 @@ const types = [
                     </template>
                 </FormSection>
 
-                <template v-if="hasPermission('delete')">
+                <template v-if="props.resource && hasPermission('delete')">
                     <SectionBorder />
 
                     <DeleteResourceForm class="mt-10 sm:mt-0" :project="props.project" :resource="props.resource" />
