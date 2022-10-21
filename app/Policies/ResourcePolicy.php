@@ -31,7 +31,7 @@ class ResourcePolicy
      */
     public function view(User $user, Resource $resource)
     {
-        return $user->belongsToTeam($resource->team)
+        return $user->belongsToTeam($resource->team())
             ? Response::allow()
             : Response::deny('Your team does not own this resource.');
     }
@@ -62,7 +62,7 @@ class ResourcePolicy
             return Response::allow();
         }
 
-        if (!$user->belongsToTeam($resource->team)) {
+        if (!$user->belongsToTeam($resource->team())) {
             return Response::deny('Your team does not own this resource.');
         }
 
@@ -84,7 +84,7 @@ class ResourcePolicy
             return Response::allow();
         }
 
-        if (!$user->belongsToTeam($resource->team)) {
+        if (!$user->belongsToTeam($resource->team())) {
             return Response::deny('Your team does not own this resource.');
         }
 
@@ -102,7 +102,7 @@ class ResourcePolicy
      */
     public function restore(User $user, Resource $resource)
     {
-        if (!$user->belongsToTeam($resource->team)) {
+        if (!$user->belongsToTeam($resource->team())) {
             return Response::deny('Your team does not own this resource.');
         }
 
@@ -118,7 +118,7 @@ class ResourcePolicy
      */
     public function forceDelete(User $user, Resource $resource)
     {
-        if (!$user->belongsToTeam($resource->team)) {
+        if (!$user->belongsToTeam($resource->team())) {
             return Response::deny('Your team does not own this resource.');
         }
 

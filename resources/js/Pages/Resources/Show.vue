@@ -6,6 +6,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 import { ref } from 'vue';
+import { hasPermission } from '@/Shared/permissions.js';
 
 const props = defineProps({
     project: Object,
@@ -36,12 +37,12 @@ const deleteResource = () => {
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <Link :href="route('projects.resources.edit', [props.project.id, props.resource.id])">
+                <Link v-if="hasPermission('update')" :href="route('projects.resources.edit', [props.project.id, props.resource.id])">
                     <PrimaryButton>
                         Edit Resource
                     </PrimaryButton>
                 </Link>
-                <DangerButton @click="confirmResourceDeletion">
+                <DangerButton v-if="hasPermission('delete')" @click="confirmResourceDeletion">
                     Delete Resource
                 </DangerButton>
                 <ConfirmationModal :show="confirmingResourceDeletion" @close="confirmingResourceDeletion = false">

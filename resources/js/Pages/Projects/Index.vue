@@ -1,5 +1,6 @@
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
+import { hasPermission } from '@/Shared/permissions.js';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
@@ -18,7 +19,7 @@ const props = defineProps({
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <Link :href="route('projects.create')">
+                <Link v-if="hasPermission('create')" :href="route('projects.create')">
                     <PrimaryButton>
                         Create Project
                     </PrimaryButton>
