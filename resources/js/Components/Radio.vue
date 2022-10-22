@@ -21,6 +21,6 @@ const props = defineProps({
         :value="value"
         :name="name"
         @click="$emit('update:modelValue', $event.target.value)"
-        class="border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        class="border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50"
     >
 </template>
