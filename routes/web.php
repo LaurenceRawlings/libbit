@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GitHubController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,6 +26,9 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+Route::get('/auth/github', [GitHubController::class, 'redirect']);
+Route::get('/auth/callback/github', [GitHubController::class, 'callback']);
 
 Route::middleware([
     'auth:sanctum',

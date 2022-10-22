@@ -26,7 +26,7 @@ class User extends Authenticatable
      * @var string[]
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'github_id', 'github_token', 'github_refresh_token',
     ];
 
     /**
@@ -39,6 +39,8 @@ class User extends Authenticatable
         'remember_token',
         'two_factor_recovery_codes',
         'two_factor_secret',
+        'github_token',
+        'github_refresh_token',
     ];
 
     /**
@@ -57,5 +59,11 @@ class User extends Authenticatable
      */
     protected $appends = [
         'profile_photo_url',
+        'has_password',
     ];
+
+    public function getHasPasswordAttribute()
+    {
+        return $this->password !== null;
+    }
 }
