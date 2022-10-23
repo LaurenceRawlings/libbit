@@ -90,7 +90,7 @@ const action = computed(() => {
                             {{action}}ed.
                         </ActionMessage>
 
-                        <Link class="mr-3" :href="route('projects.show', project.id)">
+                        <Link class="mr-3" :href="props.project ? route('projects.show', project.id) : route('projects.index')">
                             <SecondaryButton>
                                 Cancel
                             </SecondaryButton>
