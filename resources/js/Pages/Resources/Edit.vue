@@ -12,6 +12,8 @@ import SectionBorder from '@/Components/SectionBorder.vue';
 import DeleteResourceForm from '@/Pages/Resources/Partials/DeleteResourceForm.vue';
 import { hasPermission } from '@/Shared/permissions.js';
 import Breadcrumbs from '@/Components/Breadcrumbs.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
+import { Link } from '@inertiajs/inertia-vue3';
 
 onMounted(() => {
     if (props.resource) {
@@ -153,6 +155,12 @@ const types = [
                         <ActionMessage :on="form.recentlySuccessful" class="mr-3">
                             {{action}}ed.
                         </ActionMessage>
+
+                        <Link class="mr-3" :href="route('projects.show', project.id)">
+                            <SecondaryButton>
+                                Cancel
+                            </SecondaryButton>
+                        </Link>
 
                         <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                             {{action}}
