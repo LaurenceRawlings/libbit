@@ -86,7 +86,7 @@ class ResourceController extends Controller
     {
         $resource->update($request->validated());
 
-        return redirect()->route('projects.resources.show', [$project, $resource]);
+        return redirect()->route('projects.resources.show', [$project, $resource])->banner('Resource updated!');
     }
 
     /**
@@ -99,6 +99,6 @@ class ResourceController extends Controller
     {
         $resource->delete();
 
-        return redirect()->route('projects.show', $project);
+        return redirect()->route('projects.show', $project)->dangerBanner('Resource deleted!');
     }
 }
