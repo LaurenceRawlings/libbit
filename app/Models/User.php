@@ -66,4 +66,13 @@ class User extends Authenticatable
     {
         return $this->password !== null;
     }
+
+    function defaultProfilePhotoUrl()
+    {
+        $name = trim(collect(explode(' ', $this->name))->map(function ($segment) {
+            return mb_substr($segment, 0, 1);
+        })->join(' '));
+
+        return 'https://ui-avatars.com/api/?name=' . urlencode($name) . '&color=16a34a&background=86efac';
+    }
 }
