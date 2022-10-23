@@ -26,7 +26,7 @@ class StoreResourceRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'type' => ['required', 'in:note,link'],
-            'content' => ['required', 'string'],
+            'content' => ['exclude_if:type,note', 'required', 'url'],
         ];
     }
 }

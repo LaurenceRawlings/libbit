@@ -136,8 +136,8 @@ const types = [
                         </div>
 
                         <!-- Resource Content -->
-                        <div class="col-span-6 sm:col-span-4">
-                            <InputLabel for="content" value="Content" />
+                        <div v-if="form.type == 'link'" class="col-span-6 sm:col-span-4">
+                            <InputLabel for="content" value="Link" />
                             <TextInput
                                 id="content"
                                 type="text"
