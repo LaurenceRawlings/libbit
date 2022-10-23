@@ -55,6 +55,10 @@ class ResourceController extends Controller
      */
     public function show(Project $project, Resource $resource)
     {
+        if ($resource->type == 'link') {
+            return redirect($resource->content);
+        }
+
         return Inertia::render('Resources/Show', [
             'project' => $project,
             'resource' => $resource,
@@ -85,6 +89,10 @@ class ResourceController extends Controller
     public function update(UpdateResourceRequest $request, Project $project, Resource $resource)
     {
         $resource->update($request->validated());
+
+        if ($resource->type == 'link') {
+            return redirect()->route('projects.show', $project)->banner('Resource updated!');
+        }
 
         return redirect()->route('projects.resources.show', [$project, $resource])->banner('Resource updated!');
     }
