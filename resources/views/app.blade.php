@@ -21,6 +21,13 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
 
+    <!-- Styles -->
+    <style>
+        ::selection {
+            background: #4ade80;
+        }
+    </style>
+
     <!-- Scripts -->
     @routes
     @vite('resources/js/app.js')
