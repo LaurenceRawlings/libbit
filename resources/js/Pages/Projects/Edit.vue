@@ -1,6 +1,6 @@
 <script setup>
 import { useForm } from '@inertiajs/inertia-vue3';
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
@@ -14,19 +14,15 @@ import { hasPermission } from '@/Shared/permissions.js';
 import Breadcrumbs from '@/Components/Breadcrumbs.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { Link } from '@inertiajs/inertia-vue3';
-
-onMounted(() => {
-    if (props.project) {
-        form.name = props.project.name;
-    }
-});
+import TagEditor from '@/Components/TagEditor.vue';
 
 const props = defineProps({
     project: Object,
 });
 
 const form = useForm({
-    name: '',
+    name: props.project ? props.project.name : '',
+    tags: props.project ? props.project.tags.map((tag) => tag.name) : [],
 });
 
 const submit = () => {
@@ -44,6 +40,11 @@ const submit = () => {
 const action = computed(() => {
   return props.project ? 'Update' : 'Create'
 })
+
+const tagError = computed(() => {
+    const keys = Object.keys(form.errors).filter((key) => key.startsWith('tags.'));
+    return keys ? form.errors[keys[0]] : null;
+});
 </script>
 
 <template>
@@ -82,6 +83,16 @@ const action = computed(() => {
                                 required
                             />
                             <InputError :message="form.errors.name" class="mt-2" />
+                        </div>
+
+                        <!-- Project Tags -->
+                        <div class="col-span-6 sm:col-span-4">
+                            <InputLabel for="tags">
+                                Tags
+                                <span class="ml-1 text-gray-400">(separate with spaces)</span>
+                            </InputLabel>
+                            <TagEditor id="tags" v-model="form.tags" />
+                            <InputError :message="tagError" class="mt-2" />
                         </div>
                     </template>
 

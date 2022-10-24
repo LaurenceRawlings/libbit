@@ -1,6 +1,6 @@
 <script setup>
 import { useForm } from '@inertiajs/inertia-vue3';
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
@@ -14,14 +14,7 @@ import { hasPermission } from '@/Shared/permissions.js';
 import Breadcrumbs from '@/Components/Breadcrumbs.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { Link } from '@inertiajs/inertia-vue3';
-
-onMounted(() => {
-    if (props.resource) {
-        form.name = props.resource.name;
-        form.type = props.resource.type;
-        form.content = props.resource.content;
-    }
-});
+import TagEditor from '@/Components/TagEditor.vue';
 
 const props = defineProps({
     project: Object,
@@ -29,9 +22,10 @@ const props = defineProps({
 });
 
 const form = useForm({
-    name: '',
-    type: 'link',
-    content: '',
+    name: props.resource ? props.resource.name : '',
+    type: props.resource ? props.resource.type : 'link',
+    content: props.resource ? props.resource.content : '',
+    tags: props.resource ? props.resource.tags.map((tag) => tag.name) : [],
 });
 
 const submit = () => {
@@ -54,6 +48,12 @@ const types = [
     { value: 'link', name: 'Link', description: 'A link to a website or document.' },
     { value: 'note', name: 'Note', description: 'A note or description.' },
 ];
+
+
+const tagError = computed(() => {
+    const keys = Object.keys(form.errors).filter((key) => key.startsWith('tags.'));
+    return keys ? form.errors[keys[0]] : null;
+});
 </script>
 
 <template>
@@ -148,6 +148,16 @@ const types = [
                                 required
                             />
                             <InputError :message="form.errors.content" class="mt-2" />
+                        </div>
+
+                        <!-- Project Tags -->
+                        <div class="col-span-6 sm:col-span-4">
+                            <InputLabel for="tags">
+                                Tags
+                                <span class="ml-1 text-gray-400">(separate with spaces)</span>
+                            </InputLabel>
+                            <TagEditor id="tags" v-model="form.tags" />
+                            <InputError :message="tagError" class="mt-2" />
                         </div>
                     </template>
 

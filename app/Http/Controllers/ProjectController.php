@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use Inertia\Inertia;
+use App\Models\Tag;
 
 class ProjectController extends Controller
 {
@@ -54,9 +55,19 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
+        $validated = $request->validated();
+
         $project = auth()->user()->currentTeam->projects()->create(
-            $request->validated() + ['user_id' => auth()->id()]
+            $validated + ['user_id' => auth()->id()]
         );
+
+        if (isset($validated['tags'])) {
+            $tagIds = collect($validated['tags'])->map(function ($tag) {
+                return Tag::firstOrCreate(['name' => $tag])->id;
+            });
+
+            $project->tags()->sync($tagIds);
+        }
 
         if ($request->expectsJson()) {
             return new ProjectResource($project);
@@ -105,7 +116,19 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        $project->update($request->validated());
+        $validated = $request->validated();
+
+        $project->update($validated);
+
+        if (isset($validated['tags'])) {
+            $tagIds = collect($validated['tags'])->map(function ($tag) {
+                return Tag::firstOrCreate(['name' => $tag])->id;
+            });
+
+            $project->tags()->sync($tagIds);
+        } else {
+            $project->tags()->detach();
+        }
 
         if ($request->expectsJson()) {
             return new ProjectResource($project);

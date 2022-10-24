@@ -30,6 +30,12 @@ const props = defineProps({
                     </PrimaryButton>
                 </Link>
             </div>
+            <div v-if="props.project.tags.length > 0" class="flex flex-wrap items-center mt-1">
+                <span class="text-sm text-gray-400 mr-2">Tags:</span>
+                <span v-for="tag in props.project.tags" :key="tag.id" class="text-sm text-white mr-2 rounded-2xl bg-green-600 px-2 m-1">
+                    {{ tag.name }}
+                </span>
+            </div>
         </template>
 
         <div>

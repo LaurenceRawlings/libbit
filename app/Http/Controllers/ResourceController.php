@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Models\Resource;
 use Inertia\Inertia;
 use App\Http\Resources\ResourceResource;
+use App\Models\Tag;
 
 class ResourceController extends Controller
 {
@@ -55,9 +56,19 @@ class ResourceController extends Controller
      */
     public function store(StoreResourceRequest $request, Project $project)
     {
+        $validated = $request->validated();
+
         $resource = $project->resources()->create(
-            $request->validated() + ['user_id' => auth()->id()]
+            $validated + ['user_id' => auth()->id()]
         );
+
+        if (isset($validated['tags'])) {
+            $tagIds = collect($validated['tags'])->map(function ($tag) {
+                return Tag::firstOrCreate(['name' => $tag])->id;
+            });
+
+            $resource->tags()->sync($tagIds);
+        }
 
         if (request()->expectsJson()) {
             return new ResourceResource($resource);
@@ -111,7 +122,19 @@ class ResourceController extends Controller
      */
     public function update(UpdateResourceRequest $request, Project $project, Resource $resource)
     {
-        $resource->update($request->validated());
+        $validated = $request->validated();
+
+        $resource->update($validated);
+
+        if (isset($validated['tags'])) {
+            $tagIds = collect($validated['tags'])->map(function ($tag) {
+                return Tag::firstOrCreate(['name' => $tag])->id;
+            });
+
+            $resource->tags()->sync($tagIds);
+        } else {
+            $resource->tags()->detach();
+        }
 
         if (request()->expectsJson()) {
             return new ResourceResource($resource);

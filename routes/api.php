@@ -4,6 +4,7 @@ use App\Http\Controllers\ProjectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ResourceController;
+use App\Models\Tag;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,4 +24,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+});
+
+Route::get('/tags/{query}', function ($query) {
+    return Tag::where('name', 'like', '%' . $query . '%')->get();
 });

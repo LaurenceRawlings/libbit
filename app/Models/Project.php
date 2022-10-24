@@ -11,6 +11,8 @@ class Project extends Model
     use Traits\HasUser;
     use Traits\Taggable;
 
+    protected $with = ['tags'];
+
     protected $fillable = [
         'user_id',
         'name',
