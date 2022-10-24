@@ -33,7 +33,7 @@ class ProjectController extends Controller
         }
 
         return Inertia::render('Projects/Index', [
-            'projects' => auth()->user()->currentTeam->projects,
+            'projects' => auth()->user()->currentTeam->projects()->paginate(9),
         ]);
     }
 
@@ -90,7 +90,7 @@ class ProjectController extends Controller
 
         return Inertia::render('Projects/Show', [
             'project' => $project,
-            'resources' => $project->resources,
+            'resources' => $project->resources()->paginate(9),
         ]);
     }
 

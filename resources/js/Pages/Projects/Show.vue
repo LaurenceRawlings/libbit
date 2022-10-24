@@ -5,10 +5,11 @@ import { Link } from '@inertiajs/inertia-vue3';
 import { hasPermission } from '@/Shared/permissions.js';
 import ResourceCard from '@/Pages/Projects/Partials/ResourceCard.vue';
 import Breadcrumbs from '@/Components/Breadcrumbs.vue';
+import Paginator from '@/Components/Paginator.vue';
 
 const props = defineProps({
     project: Object,
-    resources: Array,
+    resources: Object,
 });
 </script>
 
@@ -41,7 +42,11 @@ const props = defineProps({
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
-                    <ResourceCard v-for="resource in props.resources" :key="resource.id" :project="project" :resource="resource" />
+                    <ResourceCard v-for="resource in props.resources.data" :key="resource.id" :project="project" :resource="resource" />
+                </div>
+
+                <div class="grid place-items-center w-full mt-6">
+                    <Paginator :links="props.resources.links" />
                 </div>
             </div>
         </div>

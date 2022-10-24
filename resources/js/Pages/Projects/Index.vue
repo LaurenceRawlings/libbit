@@ -4,9 +4,10 @@ import { hasPermission } from '@/Shared/permissions.js';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import ProjectCard from '@/Pages/Projects/Partials/ProjectCard.vue';
+import Paginator from '@/Components/Paginator.vue';
 
 const props = defineProps({
-    projects: Array,
+    projects: Object,
 });
 </script>
 
@@ -29,7 +30,11 @@ const props = defineProps({
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
-                    <ProjectCard v-for="project in props.projects" :key="project.id" :project="project" />
+                    <ProjectCard v-for="project in props.projects.data" :key="project.id" :project="project" />
+                </div>
+
+                <div class="grid place-items-center w-full mt-6">
+                    <Paginator :links="props.projects.links" />
                 </div>
             </div>
         </div>
