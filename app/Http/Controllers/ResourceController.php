@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateResourceRequest;
 use App\Models\Project;
 use App\Models\Resource;
 use Inertia\Inertia;
+use App\Http\Resources\ResourceResource;
 
 class ResourceController extends Controller
 {
@@ -18,6 +19,20 @@ class ResourceController extends Controller
     public function __construct()
     {
         $this->authorizeResource(Resource::class, 'resource');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Project $project)
+    {
+        if (request()->expectsJson()) {
+            return ResourceResource::collection($project->resources);
+        }
+
+        abort(404);
     }
 
     /**
@@ -40,9 +55,13 @@ class ResourceController extends Controller
      */
     public function store(StoreResourceRequest $request, Project $project)
     {
-        $project->resources()->create(
+        $resource = $project->resources()->create(
             $request->validated() + ['user_id' => auth()->id()]
         );
+
+        if (request()->expectsJson()) {
+            return new ResourceResource($resource);
+        }
 
         return redirect()->route('projects.show', $project);
     }
@@ -55,6 +74,10 @@ class ResourceController extends Controller
      */
     public function show(Project $project, Resource $resource)
     {
+        if (request()->expectsJson()) {
+            return new ResourceResource($resource);
+        }
+
         if ($resource->type == 'link') {
             return redirect($resource->content);
         }
@@ -90,6 +113,10 @@ class ResourceController extends Controller
     {
         $resource->update($request->validated());
 
+        if (request()->expectsJson()) {
+            return new ResourceResource($resource);
+        }
+
         if ($resource->type == 'link') {
             return redirect()->route('projects.show', $project)->banner('Resource updated!');
         }
@@ -106,6 +133,10 @@ class ResourceController extends Controller
     public function destroy(Project $project, Resource $resource)
     {
         $resource->delete();
+
+        if (request()->expectsJson()) {
+            return response()->noContent();
+        }
 
         return redirect()->route('projects.show', $project)->dangerBanner('Resource deleted!');
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use Inertia\Inertia;
 
@@ -26,6 +27,10 @@ class ProjectController extends Controller
      */
     public function index()
     {
+        if (request()->expectsJson()) {
+            return ProjectResource::collection(auth()->user()->currentTeam->projects);
+        }
+
         return Inertia::render('Projects/Index', [
             'projects' => auth()->user()->currentTeam->projects,
         ]);
@@ -53,6 +58,10 @@ class ProjectController extends Controller
             $request->validated() + ['user_id' => auth()->id()]
         );
 
+        if ($request->expectsJson()) {
+            return new ProjectResource($project);
+        }
+
         return redirect()->route('projects.show', $project);
     }
 
@@ -64,6 +73,10 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        if (request()->expectsJson()) {
+            return new ProjectResource($project);
+        }
+
         return Inertia::render('Projects/Show', [
             'project' => $project,
             'resources' => $project->resources,
@@ -94,6 +107,10 @@ class ProjectController extends Controller
     {
         $project->update($request->validated());
 
+        if ($request->expectsJson()) {
+            return new ProjectResource($project);
+        }
+
         return redirect()->route('projects.show', $project)->banner('Project updated!');
     }
 
@@ -106,6 +123,10 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         $project->delete();
+
+        if (request()->expectsJson()) {
+            return response()->noContent();
+        }
 
         return redirect()->route('projects.index')->dangerBanner('Project deleted!');
     }
