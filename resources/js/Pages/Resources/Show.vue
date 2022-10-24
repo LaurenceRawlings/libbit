@@ -3,10 +3,16 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import { Link } from '@inertiajs/inertia-vue3';
 import { hasPermission } from '@/Shared/permissions.js';
 import Breadcrumbs from '@/Components/Breadcrumbs.vue';
+import TabView from '@/Components/TabView.vue';
+import { computed } from 'vue';
 
 const props = defineProps({
     project: Object,
     resource: Object,
+});
+
+const compiledMarkdown = computed(() => {
+    return marked.parse(props.resource.content ? props.resource.content : '*head to the edit tab to start your note...*', {gfm: true});
 });
 </script>
 
@@ -36,9 +42,21 @@ const props = defineProps({
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <div class="p-4 bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    {{props.resource.content}}
-                </div>
+                <TabView :tab-names="['View', 'Edit']">
+                    <template #1>
+                        <div class="max-w-full prose px-3 sm:px-24 py-8"
+                            v-html="compiledMarkdown"></div>
+                    </template>
+                    <template #2>
+                        <div class="w-full h-full relative">
+                            <textarea id="content"
+                                class="w-full rounded-t-none rounded-b-none border-0 focus:outline-none focus:ring-0 font-mono -mb-2 bg-transparent"
+                                v-model="props.resource.content" rows="10" maxlength="10000"
+                                style="height: 512px"
+                                placeholder="type your note here, github flavoured markdown supported..."></textarea>
+                        </div>
+                    </template>
+                </TabView>
             </div>
         </div>
     </AppLayout>
