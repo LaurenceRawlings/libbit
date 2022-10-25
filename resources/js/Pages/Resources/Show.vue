@@ -7,6 +7,7 @@ import TabView from '@/Components/TabView.vue';
 import { computed, ref, onUnmounted } from 'vue';
 import { useForm } from '@inertiajs/inertia-vue3';
 import ActionMessage from '@/Components/ActionMessage.vue';
+import InputCount from '@/Components/InputCount.vue';
 
 const props = defineProps({
     project: Object,
@@ -90,6 +91,8 @@ const editing = _.throttle(_editing, 200);
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <TabView :tab-names="hasPermission('update') ? ['View', 'Edit'] : ['View']">
                     <template #buttons>
+                        <InputCount class="ml-3" :current="form.content ? form.content.length : 0" :max="10000"/>
+
                         <ActionMessage :on="form.recentlySuccessful" class="ml-3">
                             Saved.
                         </ActionMessage>
