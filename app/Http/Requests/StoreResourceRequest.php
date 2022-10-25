@@ -26,7 +26,8 @@ class StoreResourceRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'type' => ['required', 'in:note,link'],
-            'content' => ['exclude_if:type,note', 'required', 'url'],
+            'link' => ['exclude_if:type,note', 'url'],
+            'content' => ['exclude_if:type,link', 'string', 'max:10000'],
             'tags.*' => ['alpha_dash', 'max:20'],
         ];
     }

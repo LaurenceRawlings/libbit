@@ -24,7 +24,7 @@ const props = defineProps({
 const form = useForm({
     name: props.resource ? props.resource.name : '',
     type: props.resource ? props.resource.type : 'link',
-    content: props.resource ? props.resource.content : '',
+    link: props.resource ? props.resource.link : '',
     tags: props.resource ? props.resource.tags.map((tag) => tag.name) : [],
 });
 
@@ -137,17 +137,17 @@ const tagError = computed(() => {
                             </div>
                         </div>
 
-                        <!-- Resource Content -->
+                        <!-- Resource Link -->
                         <div v-if="form.type == 'link'" class="col-span-6 sm:col-span-4">
-                            <InputLabel for="content" value="Link" />
+                            <InputLabel for="link" value="Link" />
                             <TextInput
-                                id="content"
+                                id="link"
                                 type="text"
-                                v-model="form.content"
+                                v-model="form.link"
                                 class="mt-1 block w-full"
                                 required
                             />
-                            <InputError :message="form.errors.content" class="mt-2" />
+                            <InputError :message="form.errors.link" class="mt-2" />
                         </div>
 
                         <!-- Project Tags -->

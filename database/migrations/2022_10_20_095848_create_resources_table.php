@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->enum('type', ['link', 'note']);
+            $table->string('link')->nullable();
             $table->text('content')->nullable();
             $table->timestamps();
         });

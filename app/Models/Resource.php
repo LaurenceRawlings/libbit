@@ -17,6 +17,7 @@ class Resource extends Model
         'user_id',
         'name',
         'type',
+        'link',
         'content',
     ];
 
