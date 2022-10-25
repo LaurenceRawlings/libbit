@@ -5,15 +5,32 @@ import { hasPermission } from '@/Shared/permissions.js';
 import Breadcrumbs from '@/Components/Breadcrumbs.vue';
 import TabView from '@/Components/TabView.vue';
 import { computed } from 'vue';
+import { useForm } from '@inertiajs/inertia-vue3';
+import ActionMessage from '@/Components/ActionMessage.vue';
 
 const props = defineProps({
     project: Object,
     resource: Object,
 });
 
-const compiledMarkdown = computed(() => {
-    return marked.parse(props.resource.content ? props.resource.content : '*head to the edit tab to start your note...*', {gfm: true});
+const form = useForm({
+    name: props.resource.name,
+    type: props.resource.type,
+    content: props.resource.content,
+    tags: props.resource.tags.map((tag) => tag.name),
 });
+
+const compiledMarkdown = computed(() => {
+    return marked.parse(form.content ? form.content : '*head to the edit tab to start your note...*', {gfm: true});
+});
+
+const _updateContent = () => {
+    form.put(route('projects.resources.update', [props.project.id, props.resource.id]), {
+        preserveScroll: true,
+    });
+};
+
+const updateContent = _.debounce(_updateContent, 3000);
 </script>
 
 <template>
@@ -42,16 +59,22 @@ const compiledMarkdown = computed(() => {
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <TabView :tab-names="['View', 'Edit']">
+                <TabView :tab-names="hasPermission('update') ? ['View', 'Edit'] : ['View']">
+                    <template #buttons>
+                        <ActionMessage :on="form.recentlySuccessful" class="ml-3">
+                            Saved.
+                        </ActionMessage>
+                    </template>
                     <template #1>
                         <div class="max-w-full prose px-3 sm:px-24 py-8"
                             v-html="compiledMarkdown"></div>
                     </template>
-                    <template #2>
+                    <template #2 v-if="hasPermission('update')">
                         <div class="w-full h-full relative">
                             <textarea id="content"
+                                @input="updateContent"
                                 class="w-full rounded-t-none rounded-b-none border-0 focus:outline-none focus:ring-0 font-mono -mb-2 bg-transparent"
-                                v-model="props.resource.content" rows="10" maxlength="10000"
+                                v-model="form.content" rows="10" maxlength="10000"
                                 style="height: 512px"
                                 placeholder="type your note here, github flavoured markdown supported..."></textarea>
                         </div>

@@ -14,7 +14,7 @@ const currentTab = ref(0);
 
 <template>
     <div>
-        <div class="w-full flex overflow-hidden">
+        <div class="w-full flex overflow-hidden items-center">
             <SecondaryButton v-for="(name, i) in tabNames" @click="currentTab = i"
                 :class="{'opacity-50': currentTab !== i, 'font-bold': currentTab === i, 'sm:rounded-tl-lg': i === 0, 'rounded-tr-lg': i === tabNames.length - 1}"
                 class="rounded-b-none rounded-t-none border-b-0">

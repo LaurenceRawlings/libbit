@@ -90,7 +90,7 @@ class ResourceController extends Controller
         }
 
         if ($resource->type == 'link') {
-            return redirect($resource->content);
+            return redirect($resource->link);
         }
 
         return Inertia::render('Resources/Show', [
@@ -144,7 +144,13 @@ class ResourceController extends Controller
             return redirect()->route('projects.show', $project)->banner('Resource updated!');
         }
 
-        return redirect()->route('projects.resources.show', [$project, $resource])->banner('Resource updated!');
+        $redirect = redirect()->route('projects.resources.show', [$project, $resource]);
+
+        if ($request->has('content')) {
+            return $redirect;
+        }
+
+        return $redirect->banner('Resource updated!');
     }
 
     /**
