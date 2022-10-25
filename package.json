@@ -21,6 +21,8 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
-        "marked": "^4.1.1"
+        "laravel-echo": "^1.14.0",
+        "marked": "^4.1.1",
+        "pusher-js": "^7.4.0"
     }
 }
