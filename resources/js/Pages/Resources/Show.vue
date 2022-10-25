@@ -4,7 +4,7 @@ import { Link } from '@inertiajs/inertia-vue3';
 import { hasPermission } from '@/Shared/permissions.js';
 import Breadcrumbs from '@/Components/Breadcrumbs.vue';
 import TabView from '@/Components/TabView.vue';
-import { computed } from 'vue';
+import { computed, ref, onUnmounted } from 'vue';
 import { useForm } from '@inertiajs/inertia-vue3';
 import ActionMessage from '@/Components/ActionMessage.vue';
 
@@ -12,6 +12,27 @@ const props = defineProps({
     project: Object,
     resource: Object,
 });
+
+const channel = Echo.join(`resource.${props.resource.id}`);
+const editors = ref([]);
+
+onUnmounted(() => {
+    Echo.leave(`resource.${props.resource.id}`);
+});
+
+channel
+    .here(users => {
+        editors.value = users;
+    })
+    .joining(user => {
+        editors.value.push(user);
+    })
+    .leaving(user => {
+        editors.value = editors.value.filter(u => u.id !== user.id);
+    })
+    .listenForWhisper('editing', (e) => {
+        form.content = e.content;
+    });
 
 const form = useForm({
     name: props.resource.name,
@@ -31,6 +52,14 @@ const _updateContent = () => {
 };
 
 const updateContent = _.debounce(_updateContent, 3000);
+
+const _editing = () => {
+    channel.whisper('editing', {
+        content: form.content,
+    });
+};
+
+const editing = _.throttle(_editing, 200);
 </script>
 
 <template>
@@ -64,6 +93,10 @@ const updateContent = _.debounce(_updateContent, 3000);
                         <ActionMessage :on="form.recentlySuccessful" class="ml-3">
                             Saved.
                         </ActionMessage>
+
+                        <div v-if="editors.length > 0" class="flex items-center ml-auto mr-1 sm:mr-0">
+                            <img v-for="editor in editors" :key="editor.id" class="h-6 w-6 ml-1 rounded-full object-cover border border-white" :src="editor.profile_photo_url" :alt="editor.name" :title="editor.name"/>
+                        </div>
                     </template>
                     <template #1>
                         <div class="max-w-full prose px-3 sm:px-24 py-8"
@@ -73,6 +106,7 @@ const updateContent = _.debounce(_updateContent, 3000);
                         <div class="w-full h-full relative">
                             <textarea id="content"
                                 @input="updateContent"
+                                @keydown="editing"
                                 class="w-full rounded-t-none rounded-b-none border-0 focus:outline-none focus:ring-0 font-mono -mb-2 bg-transparent"
                                 v-model="form.content" rows="10" maxlength="10000"
                                 style="height: 512px"
