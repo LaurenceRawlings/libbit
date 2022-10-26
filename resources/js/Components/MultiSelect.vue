@@ -54,7 +54,7 @@ const toggle = (item) => {
             >
                 <div class="flex flex-col divide-y">
                     <div v-for="(item, i) in props.list" :key="i" class="flex items-center px-4 py-2">
-                        <Checkbox @update:modelValue="toggle(item)"/>
+                        <Checkbox @update:modelValue="toggle(item)" :checked="props.modelValue.includes(item)"/>
                         <span class="ml-2">{{ item }}</span>
                     </div>
                 </div>

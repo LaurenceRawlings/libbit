@@ -29,3 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/tags/{query}', function ($query) {
     return Tag::where('name', 'like', '%' . $query . '%')->get();
 });
+
+Route::get('/tags', function () {
+    return Tag::all();
+});

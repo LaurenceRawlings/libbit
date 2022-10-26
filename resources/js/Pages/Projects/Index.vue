@@ -1,22 +1,54 @@
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
+import { Inertia } from '@inertiajs/inertia';
 import { hasPermission } from '@/Shared/permissions.js';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import ProjectCard from '@/Pages/Projects/Partials/ProjectCard.vue';
 import Paginator from '@/Components/Paginator.vue';
 import MultiSelect from '@/Components/MultiSelect.vue';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import TextInput from '@/Components/TextInput.vue';
 
 const props = defineProps({
     projects: Object,
+    search: String,
+    tags: Array,
+});
+
+const tags = ref([])
+
+onMounted(() => {
+    axios
+        .get(`/api/tags`)
+        .then((response) => {
+            tags.value = response.data.map((tag) => tag.name);
+        });
 });
 
 const filters = ref({
-    search: '',
-    tags: [],
+    search: props.search,
+    tags: props.tags,
 });
+
+const _search = () => {
+    let data = {
+        search: filters.value.search,
+        tags: filters.value.tags.join(','),
+    }
+
+    if (data.tags === '') {
+        delete data.tags;
+    }
+
+    if (data.search === '') {
+        delete data.search;
+    }
+
+    Inertia.get(route('projects.index'), data);
+}
+
+const search = _.debounce(_search, 1000);
 </script>
 
 <template>
@@ -38,11 +70,11 @@ const filters = ref({
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <div class="flex mb-6 h-12">
-                    <TextInput class="rounded-none sm:rounded-l-md border-r-0 w-1/2" v-model="filters.search" placeholder="Search projects..." type="text" />
+                    <TextInput class="rounded-none sm:rounded-l-md border-r-0 w-1/2" v-model="filters.search" placeholder="Search projects..." type="text" @input="search" autofocus />
 
                     <MultiSelect
                         class="mb-4 w-1/2"
-                        :list="['All', 'Mine', 'Starred', 'Test', 'Yeah-Yeah']"
+                        :list="tags"
                         v-model="filters.tags">
                         <div v-if="filters.tags.length == 0" class="text-gray-500">Filter by tag...</div>
 

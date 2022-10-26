@@ -8,6 +8,7 @@ use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use Inertia\Inertia;
 use App\Models\Tag;
+use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
@@ -26,14 +27,39 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $tags = [];
+        if ($request->has('tags')) {
+            $tags = explode(',', $request->tags);
+        }
+
+        if ($request->has('search') || $request->has('tags')) {
+            $projects = auth()->user()->currentTeam->projects()
+            ->when($request->has('search'), function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->search . '%');
+            })
+            ->when(count($tags) > 0, function ($query) use ($tags) {
+                $query->whereHas('tags', function ($query) use ($tags) {
+                    $query->whereIn('name', $tags);
+                });
+            })->paginate(9);
+
+            if (request()->expectsJson()) {
+                return $projects;
+            }
+        } else {
+            $projects = auth()->user()->currentTeam->projects()->paginate(9);
+        }
+
         if (request()->expectsJson()) {
             return ProjectResource::collection(auth()->user()->currentTeam->projects);
         }
 
         return Inertia::render('Projects/Index', [
-            'projects' => auth()->user()->currentTeam->projects()->paginate(9),
+            'projects' => $projects,
+            'search' => $request->search,
+            'tags' => $tags,
         ]);
     }
 
