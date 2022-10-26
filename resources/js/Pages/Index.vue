@@ -8,7 +8,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 <template>
     <Head title="Welcome" />
 
-    <div class="grid place-items-center min-h-screen bg-gradient-to-br from-green-200 via-green-300 to-green-400 sm:pt-0">
+    <div class="grid place-items-center min-h-screen bg-gradient-to-br from-green-500 to-green-600 sm:pt-0">
         <div class="grid place-items-center bg-white shadow-xl p-8 sm:p-16 sm:rounded-lg">
             <ApplicationMark class="w-16 h-16 mb-2" />
             <div class="text-2xl text-green-600 mb-2 text-center">
