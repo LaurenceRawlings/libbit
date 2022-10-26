@@ -1,5 +1,6 @@
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
+import Pin from '@/Components/Pin.vue';
 
 const props = defineProps({
     project: Object,
@@ -14,6 +15,7 @@ const props = defineProps({
             <div>
                 {{ project.name }}
             </div>
+            <Pin :pinableId="props.project.id" :pinned="props.project.is_pinned" pinableType="project" class="text-green-600 ml-auto"/>
         </div>
     </Link>
 </template>

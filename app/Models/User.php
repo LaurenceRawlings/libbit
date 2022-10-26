@@ -74,4 +74,19 @@ class User extends Authenticatable
 
         return 'https://ui-avatars.com/api/?name='.urlencode($name).'&color=16a34a&background=86efac';
     }
+
+    public function pinned()
+    {
+        return $this->morphMany(Pin::class, 'user');
+    }
+
+    public function pinnedResources()
+    {
+        return $this->morphedByMany(Resource::class, 'pinable')->whereDeletedAt(null);
+    }
+
+    public function pinnedProjects()
+    {
+        return $this->morphedByMany(Project::class, 'pinable')->whereDeletedAt(null);
+    }
 }

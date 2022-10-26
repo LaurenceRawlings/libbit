@@ -1,6 +1,7 @@
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
 import { hasPermission } from '@/Shared/permissions.js';
+import Pin from '@/Components/Pin.vue';
 
 const props = defineProps({
     project: Object,
@@ -18,7 +19,10 @@ const props = defineProps({
                 <div>
                     {{ resource.name }}
                 </div>
-                <Link class="ml-auto rounded-full p-1 border border-gray-300 shadow-sm text-gray-700 bg-white hover:bg-gray-50" v-if="hasPermission('update')" :href="route('projects.resources.edit', [props.project.id, props.resource.id])">
+
+                <Pin :pinableId="props.resource.id" :pinned="props.resource.is_pinned" pinableType="resource" class="text-green-600 ml-auto"/>
+
+                <Link class="ml-3 rounded-full p-1 border border-gray-300 shadow-sm text-gray-700 bg-white hover:bg-gray-50" v-if="hasPermission('update')" :href="route('projects.resources.edit', [props.project.id, props.resource.id])">
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512">
                         <path d="M64 360c30.9 0 56 25.1 56 56s-25.1 56-56 56s-56-25.1-56-56s25.1-56 56-56zm0-160c30.9 0 56 25.1 56 56s-25.1 56-56 56s-56-25.1-56-56s25.1-56 56-56zM120 96c0 30.9-25.1 56-56 56S8 126.9 8 96S33.1 40 64 40s56 25.1 56 56z" fill="currentColor"/>
                     </svg>
@@ -34,6 +38,8 @@ const props = defineProps({
                 <div>
                     {{ resource.name }}
                 </div>
+
+                <Pin :pinableId="props.resource.id" :pinned="props.resource.is_pinned" pinableType="resource" class="text-green-600 ml-auto"/>
             </div>
         </Link>
     </template>

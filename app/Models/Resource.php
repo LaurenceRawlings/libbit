@@ -10,6 +10,7 @@ class Resource extends Model
     use HasFactory;
     use Traits\HasUser;
     use Traits\Taggable;
+    use Traits\Pinable;
 
     protected $with = ['tags'];
 
@@ -19,6 +20,10 @@ class Resource extends Model
         'type',
         'link',
         'content',
+    ];
+
+    protected $appends = [
+        'is_pinned',
     ];
 
     public function project()

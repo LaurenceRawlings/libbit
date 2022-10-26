@@ -10,6 +10,7 @@ class Project extends Model
     use HasFactory;
     use Traits\HasUser;
     use Traits\Taggable;
+    use Traits\Pinable;
 
     protected $with = ['tags'];
 
@@ -17,6 +18,10 @@ class Project extends Model
         'user_id',
         'name',
         'repo',
+    ];
+
+    protected $appends = [
+        'is_pinned',
     ];
 
     protected $withCount = [

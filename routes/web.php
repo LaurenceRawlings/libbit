@@ -3,6 +3,7 @@
 use App\Http\Controllers\GitHubController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ResourceController;
+use App\Http\Controllers\PinController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -31,8 +32,14 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
+            return Inertia::render('Dashboard', [
+            'projects' => auth()->user()->pinnedProjects,
+            'resources' => auth()->user()->pinnedResources,
+        ]);
     })->name('dashboard');
+
+    Route::patch('/pin/project', [PinController::class, 'pinProject'])->name('pin.project');
+    Route::patch('/pin/resource', [PinController::class, 'pinResource'])->name('pin.resource');
 
     Route::resource('projects', ProjectController::class);
     Route::resource('projects.resources', ResourceController::class)->except([
