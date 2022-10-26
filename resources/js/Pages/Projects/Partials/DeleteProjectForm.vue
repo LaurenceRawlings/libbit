@@ -26,6 +26,12 @@ const confirmProjectDeletion = () => {
 };
 
 const deleteProject = () => {
+    if (props.project.name !== form.password) {
+        form.errors.password = 'The project name does not match.';
+
+        return;
+    }
+
     form.delete(route('projects.destroy', props.project), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
@@ -69,15 +75,15 @@ const closeModal = () => {
                 </template>
 
                 <template #content>
-                    Are you sure you want to delete this project? Once this project is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete this project.
+                    Are you sure you want to delete this project? Once this project is deleted, all of its resources and data will be permanently deleted. Please enter the project name to confirm you would like to permanently delete this project.
 
                     <div class="mt-4">
                         <TextInput
                             ref="passwordInput"
                             v-model="form.password"
-                            type="password"
+                            type="text"
                             class="mt-1 block w-3/4"
-                            placeholder="Password"
+                            :placeholder="props.project.name"
                             @keyup.enter="deleteProject"
                         />
 
