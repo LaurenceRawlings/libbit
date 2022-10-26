@@ -1,4 +1,5 @@
 <script setup>
+import { usePage } from '@inertiajs/inertia-vue3'
 import { ref, reactive, nextTick } from 'vue';
 import DialogModal from './DialogModal.vue';
 import InputError from './InputError.vue';
@@ -34,6 +35,11 @@ const form = reactive({
 const passwordInput = ref(null);
 
 const startConfirmingPassword = () => {
+    if (!usePage().props.value.user.has_password) {
+        closeModal();
+        nextTick().then(() => emit('confirmed'));
+    }
+
     axios.get(route('password.confirmation')).then(response => {
         if (response.data.confirmed) {
             emit('confirmed');

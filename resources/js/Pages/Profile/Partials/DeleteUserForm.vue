@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useForm } from '@inertiajs/inertia-vue3';
+import { useForm, usePage } from '@inertiajs/inertia-vue3';
 import ActionSection from '@/Components/ActionSection.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import DialogModal from '@/Components/DialogModal.vue';
@@ -16,6 +16,11 @@ const form = useForm({
 });
 
 const confirmUserDeletion = () => {
+    if (!usePage().props.value.user.has_password) {
+        deleteUser();
+        return;
+    }
+
     confirmingUserDeletion.value = true;
 
     setTimeout(() => passwordInput.value.focus(), 250);
@@ -25,7 +30,7 @@ const deleteUser = () => {
     form.delete(route('current-user.destroy'), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
-        onError: () => passwordInput.value.focus(),
+        // onError: () => passwordInput.value.focus(),
         onFinish: () => form.reset(),
     });
 };
