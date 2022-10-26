@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\GitHubController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ResourceController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\ResourceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +36,6 @@ Route::middleware([
 
     Route::resource('projects', ProjectController::class);
     Route::resource('projects.resources', ResourceController::class)->except([
-        'index'
+        'index',
     ])->scoped();
 });

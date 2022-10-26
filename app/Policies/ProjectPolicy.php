@@ -62,7 +62,7 @@ class ProjectPolicy
             return Response::allow();
         }
 
-        if (!$user->belongsToTeam($project->team)) {
+        if (! $user->belongsToTeam($project->team)) {
             return Response::deny('Your team does not own this project.');
         }
 
@@ -84,7 +84,7 @@ class ProjectPolicy
             return Response::allow();
         }
 
-        if (!$user->belongsToTeam($project->team)) {
+        if (! $user->belongsToTeam($project->team)) {
             return Response::deny('Your team does not own this project.');
         }
 
@@ -102,7 +102,7 @@ class ProjectPolicy
      */
     public function restore(User $user, Project $project)
     {
-        if (!$user->belongsToTeam($project->team)) {
+        if (! $user->belongsToTeam($project->team)) {
             return Response::deny('Your team does not own this project.');
         }
 
@@ -118,7 +118,7 @@ class ProjectPolicy
      */
     public function forceDelete(User $user, Project $project)
     {
-        if (!$user->belongsToTeam($project->team)) {
+        if (! $user->belongsToTeam($project->team)) {
             return Response::deny('Your team does not own this project.');
         }
 

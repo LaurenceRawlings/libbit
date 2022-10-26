@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Laravel\Socialite\Facades\Socialite;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Team;
+use Laravel\Socialite\Facades\Socialite;
 
 class GitHubController extends Controller
 {
@@ -19,7 +19,7 @@ class GitHubController extends Controller
         $socialAccount = Socialite::driver('github')->user();
         $user = User::where('github_id', $socialAccount->getId())->first();
 
-        if (!$user) {
+        if (! $user) {
             $user = User::create([
                 'name' => $socialAccount->getName(),
                 'email' => $socialAccount->getEmail(),
@@ -30,7 +30,7 @@ class GitHubController extends Controller
 
             $user->ownedTeams()->save(Team::forceCreate([
                 'user_id' => $user->id,
-                'name' => explode(' ', $user->name, 2)[0] . "'s Team",
+                'name' => explode(' ', $user->name, 2)[0]."'s Team",
                 'personal_team' => true,
             ]));
         } else {

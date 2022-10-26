@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreResourceRequest;
 use App\Http\Requests\UpdateResourceRequest;
+use App\Http\Resources\ResourceResource;
 use App\Models\Project;
 use App\Models\Resource;
-use Inertia\Inertia;
-use App\Http\Resources\ResourceResource;
 use App\Models\Tag;
+use Inertia\Inertia;
 
 class ResourceController extends Controller
 {

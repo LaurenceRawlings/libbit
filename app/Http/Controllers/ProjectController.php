@@ -6,9 +6,9 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
 use App\Models\Project;
-use Inertia\Inertia;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
@@ -37,7 +37,7 @@ class ProjectController extends Controller
         if ($request->has('search') || $request->has('tags')) {
             $projects = auth()->user()->currentTeam->projects()
             ->when($request->has('search'), function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->search . '%');
+                $query->where('name', 'like', '%'.$request->search.'%');
             })
             ->when(count($tags) > 0, function ($query) use ($tags) {
                 $query->whereHas('tags', function ($query) use ($tags) {

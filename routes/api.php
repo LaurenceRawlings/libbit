@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ResourceController;
 use App\Models\Tag;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::get('/tags/{query}', function ($query) {
-    return Tag::where('name', 'like', '%' . $query . '%')->get();
+    return Tag::where('name', 'like', '%'.$query.'%')->get();
 });
 
 Route::get('/tags', function () {
