@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\GitHubController;
+use App\Http\Controllers\PinController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ResourceController;
-use App\Http\Controllers\PinController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,7 +32,7 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-            return Inertia::render('Dashboard', [
+        return Inertia::render('Dashboard', [
             'projects' => auth()->user()->pinnedProjects,
             'resources' => auth()->user()->pinnedResources,
         ]);

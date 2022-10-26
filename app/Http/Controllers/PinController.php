@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Pin;
 use App\Models\Project;
 use App\Models\Resource;
-use App\Models\Pin;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class PinController extends Controller
