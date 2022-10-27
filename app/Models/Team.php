@@ -46,4 +46,9 @@ class Team extends JetstreamTeam
     {
         return $this->hasMany(Project::class);
     }
+
+    public function resources()
+    {
+        return $this->hasManyThrough(Resource::class, Project::class);
+    }
 }

@@ -82,11 +82,15 @@ class User extends Authenticatable
 
     public function pinnedResources()
     {
-        return $this->morphedByMany(Resource::class, 'pinable')->whereDeletedAt(null);
+        return $this->currentTeam->resources()->whereHas('pins', function ($query) {
+            $query->whereUserId($this->id)->whereDeletedAt(null);
+        });
     }
 
     public function pinnedProjects()
     {
-        return $this->morphedByMany(Project::class, 'pinable')->whereDeletedAt(null);
+        return $this->currentTeam->projects()->whereHas('pins', function ($query) {
+            $query->whereUserId($this->id)->whereDeletedAt(null);
+        });
     }
 }
