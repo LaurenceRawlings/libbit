@@ -23,6 +23,7 @@ class GitHubController extends Controller
             $user = User::create([
                 'name' => $socialAccount->getName(),
                 'email' => $socialAccount->getEmail(),
+                'profile_photo_path' => $socialAccount->getAvatar(),
                 'github_id' => $socialAccount->getId(),
                 'github_token' => $socialAccount->token,
                 'github_refresh_token' => $socialAccount->refreshToken,
